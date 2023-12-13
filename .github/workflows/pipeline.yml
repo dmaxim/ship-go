@@ -3,11 +3,16 @@ name: CI Checks
 on:
   push:
     branches: [ main ]
+    paths:
+      - hello-api/**
+      - .github/workflows/**
 
 jobs:
   build:
     name: Build App
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./hello-api
     steps:
 
     - name: Set up Go 1.x
@@ -20,15 +25,17 @@ jobs:
 
     - name: Build
       run: make build
+      working-directory: ${{ env.working-directory }}
 
     - name: Copy Files
       run: |
         mkdir artifacts
         cp api artifacts/.
+      working-directory: ${{ env.working-directory }}
 
     - name: Archive
       uses: actions/upload-artifact@v2
       with:
         name: api
-        path: artifacts
+        path: ${{ env.working-directory }}/artifacts
   
