@@ -28,6 +28,26 @@ jobs:
       run: make test
       working-directory: ${{ env.working-directory }}
 
+    - name: Coverage Check
+      run: make coverage
+      working-directory: ${{ env.working-directory }}
+
+    - name: Generate Report
+      run: make report
+      working-directory: ${{ env.working-directory }}
+
+    - name: Copy Files
+      run: |
+        mkdir reports
+        cp cover.html reports/.
+      working-directory: ${{ env.working-directory }}
+
+    - name: Archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: reports
+        path: ${{ env.working-directory }}/reports
+
   build:
     name: Build App
     runs-on: ubuntu-latest
