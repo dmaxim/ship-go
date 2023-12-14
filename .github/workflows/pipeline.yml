@@ -53,7 +53,7 @@ jobs:
       working-directory: ${{ env.working-directory }}
 
     - name: Archive
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: api
         path: ${{ env.working-directory }}/artifacts
