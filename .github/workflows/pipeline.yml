@@ -136,12 +136,13 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
       - name: Deploy Function
         id: deploy
-        uses: google-github-actions/deploy-cloud-functions@main
+        uses: google-github-actions/deploy-cloud-functions@v2
         with:
+          workload_identity_provider: 'projects/mx-sec584/locations/global/workloadIdentityPools/mx-sec584-wip'
+          service_account: 'hello-api@mx-sec584.iam.gserviceaccount.com'
           name: translate
           entry_point: Translate
           runtime: go121
           source_dir: ${{env.working-directory}}
       - name: Test
         run: curl "${{ steps.deploy.outputs.url}}"
-
