@@ -139,9 +139,9 @@ jobs:
         uses: google-github-actions/deploy-cloud-functions@main
         with:
           name: translate
-          entrypoint: Translate
+          entry_point: Translate
           runtime: go121
           source_dir: ${{env.working-directory}}
       - name: Test
         run: curl "${{ steps.deploy.outputs.url}}"
-        
+
