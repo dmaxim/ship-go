@@ -1,54 +1,65 @@
-package rest
+package rest_test
 
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/dmaxim/hello-api/handlers/rest"
+	"github.com/dmaxim/hello-api/translation"
 )
 
-type Resp struct {
-	Language    string `json:"language"`
-	Translation string `json:"translation"`
-}
-
-type Translator interface {
-	Translate(word string, language string) string
-}
-
-type TranslateHandler struct {
-	service Translator
-}
-
-func NewTranslateHandler(service Translator) *TranslateHandler {
-	return &TranslateHandler{
-		service: service,
-	}
-}
-
-func (t *TranslateHandler) TranslateHandler(w http.ResponseWriter, r *http.Request) {
-	/* handle */
-	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-
-	language := r.URL.Query().Get("language")
-	if language == "" {
-		language = "english"
+func TestTranslateAPI(t *testing.T) {
+	tt := []struct {
+		Endpoint            string
+		StatusCode          int
+		ExpectedLanguage    string
+		ExpectedTranslation string
+	}{
+		{
+			Endpoint:            "/hello?english",
+			StatusCode:          200,
+			ExpectedLanguage:    "english",
+			ExpectedTranslation: "hello",
+		},
+		{
+			Endpoint:            "/hello?language=german",
+			StatusCode:          200,
+			ExpectedLanguage:    "german",
+			ExpectedTranslation: "hallo",
+		},
+		{
+			Endpoint:            "/hello",
+			StatusCode:          200,
+			ExpectedLanguage:    "english",
+			ExpectedTranslation: "hello",
+		},
 	}
 
-	word := strings.ReplaceAll(r.URL.Path, "/", "")
-	translation := t.service.Translate(word, language)
-	if translation == "" {
-		language = ""
-		w.WriteHeader(404)
-		return
-	}
-	resp := Resp{
-		Language:    language,
-		Translation: translation,
-	}
+	underTest := rest.NewTranslateHandler(translation.NewStaticService())
+	handler := http.HandlerFunc(underTest.TranslateHandler)
 
-	if err := enc.Encode(resp); err != nil {
-		panic("unable to encode response")
-	}
+	for _, test := range tt {
+		rr := httptest.NewRecorder()
+		req, _ := http.NewRequest("GET", test.Endpoint, nil)
 
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != test.StatusCode {
+			t.Errorf(`expected status code %d but received %d`, test.StatusCode, rr.Code)
+		}
+
+		var resp rest.Resp
+		json.Unmarshal(rr.Body.Bytes(), &resp)
+
+		if resp.Language != test.ExpectedLanguage {
+			t.Errorf(`expected language "%s", but received %s`, test.ExpectedLanguage, resp.Language)
+		}
+
+		if resp.Translation != test.ExpectedTranslation {
+			t.Errorf(`expected Translation "%s" but received %s`, test.ExpectedTranslation, resp.Translation)
+		}
+
+	}
 }
