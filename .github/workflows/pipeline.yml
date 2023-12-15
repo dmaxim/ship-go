@@ -7,7 +7,6 @@ on:
       - hello-api/**
       - .github/workflows/**
   push:
-    branches: [ main ]
     paths:
       - hello-api/**
       - .github/workflows/**
