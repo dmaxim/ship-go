@@ -4,7 +4,6 @@ import (
 	"strings"
 )
 
-
 type StaticService struct{}
 
 func NewStaticService() *StaticService {
