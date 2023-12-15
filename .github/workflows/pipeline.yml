@@ -196,8 +196,8 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
       
-      - name: Push Docker image to GCP
-        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/hello-api:latest
+      # - name: Push Docker image to GCP
+      #   run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/hello-api:latest
       
       - name: Login to the GHCR
         uses: docker/login-action@v2
