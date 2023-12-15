@@ -133,13 +133,13 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Deploy Function
         id: deploy
         uses: google-github-actions/deploy-cloud-functions@v2
         with:
-          project_id: 'sec510-323316'
-          service_account_email: 'hello-api-4@sec510-323316.iam.gserviceaccount.com'
+          #project_id: 'sec510-323316'
+          #service_account_email: 'hello-api-4@sec510-323316.iam.gserviceaccount.com'
           name: translate
           entry_point: Translate
           runtime: go121
