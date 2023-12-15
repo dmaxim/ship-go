@@ -4,6 +4,7 @@ GO_PLATFORM := linux-amd64
 setup:
 	install-go
 	init-go
+	copy-hooks
 
 install-go:
 	wget "https://golang.org/dl/go$(GO_VERSION).$(GO_PLATFORM).tar.gz"
@@ -36,5 +37,9 @@ report:
 check-format:
 	test -z $$(go fmt ./...)
 
-statict-check:
+static-check:
 	golang
+
+copy-hooks:
+	chmod +x scripts/hooks/*
+	cp -r scripts/hooks/* .git/.
