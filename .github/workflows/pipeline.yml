@@ -120,7 +120,7 @@ jobs:
   deploy-function:
     name: Deploy Faas
     runs-on: ubuntu-latest
-    needs: build
+    needs: test
     env:
       working-directory: ./hello-api
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
