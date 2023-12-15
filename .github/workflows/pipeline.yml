@@ -138,8 +138,8 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloud-functions@v2
         with:
-          workload_identity_provider: 'project/sec510-323316/locations/global/workloadIdentityPools/mx-sec584-wip'
-          service_account: 'hello-api-4@sec510-323316.iam.gserviceaccount.com'
+          project_id: 'sec510-323316'
+          service_account_email: 'hello-api-4@sec510-323316.iam.gserviceaccount.com'
           name: translate
           entry_point: Translate
           runtime: go121
