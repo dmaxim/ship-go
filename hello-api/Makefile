@@ -35,3 +35,6 @@ report:
 
 check-format:
 	test -z $$(go fmt ./...)
+
+statict-check:
+	golang
